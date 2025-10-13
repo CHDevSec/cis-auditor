@@ -1,0 +1,81 @@
+controls:
+  - id: "1.4.1"
+    category: "Bootloader Configuration"
+    description: "Ensure a password is set on the bootloader"
+    remediate: "# Ajustar o arquivo /etc/grub.d/40_custom conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "1.4.1_bootloader.sh"
+    script_audit: "1.4.1_bootloader_audit.sh"
+    script_fix: "1.4.1_bootloader_fix.sh"
+  - id: "1.5.1"
+    category: "Memory Protection"
+    description: "Ensure Address Space Layout Randomization (ASLR) is enabled"
+    remediate: "# Ajustar o arquivo /proc/sys/kernel/randomize_va_space conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "1.5.1_enabled.sh"
+    script_audit: "1.5.1_enabled_audit.sh"
+    script_fix: "1.5.1_enabled_fix.sh"
+  - id: "1.5.3"
+    category: "Memory Protection"
+    description: "Ensure core dumps are restricted"
+    remediate: "# Ajustar o arquivo /etc/security/limits.conf conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "1.5.3_restricted.sh"
+    script_audit: "1.5.3_restricted_audit.sh"
+    script_fix: "1.5.3_restricted_fix.sh"
+  - id: "5.1.20"
+    category: "SSH Configuration"
+    description: "Ensure SSH root login is disabled"
+    remediate: "# Ajustar o arquivo /etc/ssh/sshd_config conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "5.1.20_disabled.sh"
+    script_audit: "5.1.20_disabled_audit.sh"
+    script_fix: "5.1.20_disabled_fix.sh"
+  - id: "5.1.4"
+    category: "SSH Configuration"
+    description: "Ensure SSH root authentication is disabled"
+    remediate: "# Ajustar o arquivo /etc/ssh/sshd_config conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "5.1.4_disabled.sh"
+    script_audit: "5.1.4_disabled_audit.sh"
+    script_fix: "5.1.4_disabled_fix.sh"
+  - id: "5.1.19"
+    category: "SSH Configuration"
+    description: "Ensure SSH does not allow empty passwords"
+    remediate: "# Ajustar o arquivo /etc/ssh/sshd_config conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "5.1.19_passwords.sh"
+    script_audit: "5.1.19_passwords_audit.sh"
+    script_fix: "5.1.19_passwords_fix.sh"
+  - id: "5.2.7"
+    category: "User Access"
+    description: "Ensure access to the 'su' command is restricted"
+    remediate: "# Ajustar o arquivo /etc/pam.d/su conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "5.2.7_restricted.sh"
+    script_audit: "5.2.7_restricted_audit.sh"
+    script_fix: "5.2.7_restricted_fix.sh"
+  - id: "5.4.1.4"
+    category: "Authentication"
+    description: "Ensure password hashing algorithm is SHA-512"
+    remediate: "# Ajustar o arquivo /etc/login.defs conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "5.4.1.4_sha_512.sh"
+    script_audit: "5.4.1.4_sha_512_audit.sh"
+    script_fix: "5.4.1.4_sha_512_fix.sh"

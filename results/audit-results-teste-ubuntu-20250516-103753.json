@@ -1,0 +1,66 @@
+[
+  {
+    "ID": "1.4.1",
+    "Category": "Bootloader Configuration",
+    "Description": "Ensure a password is set on the bootloader",
+    "Status": "FAIL",
+    "Remediation": "# Ajustar o arquivo /etc/grub.d/40_custom conforme a recomendação do benchmark",
+    "Details": "Senha GRUB NÃO configurada!"
+  },
+  {
+    "ID": "1.5.1",
+    "Category": "Memory Protection",
+    "Description": "Ensure Address Space Layout Randomization (ASLR) is enabled",
+    "Status": "PASS",
+    "Remediation": "# Ajustar o arquivo /proc/sys/kernel/randomize_va_space conforme a recomendação do benchmark",
+    "Details": ""
+  },
+  {
+    "ID": "1.5.3",
+    "Category": "Memory Protection",
+    "Description": "Ensure core dumps are restricted",
+    "Status": "FAIL",
+    "Remediation": "# Ajustar o arquivo /etc/security/limits.conf conforme a recomendação do benchmark",
+    "Details": "Core dumps NÃO estão restritos! Linha esperada: '* hard core 0'"
+  },
+  {
+    "ID": "5.1.20",
+    "Category": "SSH Configuration",
+    "Description": "Ensure SSH root login is disabled",
+    "Status": "FAIL",
+    "Remediation": "# Ajustar o arquivo /etc/ssh/sshd_config conforme a recomendação do benchmark",
+    "Details": "Login root via SSH NÃO está desabilitado! Esperado: 'PermitRootLogin no'"
+  },
+  {
+    "ID": "5.1.4",
+    "Category": "SSH Configuration",
+    "Description": "Ensure SSH root authentication is disabled",
+    "Status": "FAIL",
+    "Remediation": "# Ajustar o arquivo /etc/ssh/sshd_config conforme a recomendação do benchmark",
+    "Details": "Autenticação root via SSH NÃO está desabilitada! Esperado: 'PermitRootLogin no'"
+  },
+  {
+    "ID": "5.1.19",
+    "Category": "SSH Configuration",
+    "Description": "Ensure SSH does not allow empty passwords",
+    "Status": "FAIL",
+    "Remediation": "# Ajustar o arquivo /etc/ssh/sshd_config conforme a recomendação do benchmark",
+    "Details": "SSH permite senhas vazias! Esperado: 'PermitEmptyPasswords no'"
+  },
+  {
+    "ID": "5.2.7",
+    "Category": "User Access",
+    "Description": "Ensure access to the 'su' command is restricted",
+    "Status": "FAIL",
+    "Remediation": "# Ajustar o arquivo /etc/pam.d/su conforme a recomendação do benchmark",
+    "Details": "O acesso ao comando 'su' NÃO está restrito corretamente ao grupo 'sudo'"
+  },
+  {
+    "ID": "5.4.1.4",
+    "Category": "Authentication",
+    "Description": "Ensure password hashing algorithm is SHA-512",
+    "Status": "PASS",
+    "Remediation": "# Ajustar o arquivo /etc/login.defs conforme a recomendação do benchmark",
+    "Details": ""
+  }
+]

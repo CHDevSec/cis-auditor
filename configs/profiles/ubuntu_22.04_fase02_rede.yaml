@@ -1,0 +1,111 @@
+controls:
+  - id: "3.3.1"
+    category: "Network Parameters Hardening"
+    description: "Ensure ip forwarding is disabled"
+    remediate: "# Ajustar parâmetros de rede via sysctl ou arquivos persistentes conforme o benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "3.3.1_ensure_ip_forwarding_is_disabled.sh"
+    script_audit: "3.3.1_ensure_ip_forwarding_is_disabled_audit.sh"
+    script_fix: "3.3.1_ensure_ip_forwarding_is_disabled_fix.sh"
+  - id: "3.3.2"
+    category: "Network Parameters Hardening"
+    description: "Ensure packet redirect sending is disabled"
+    remediate: "# Ajustar parâmetros de rede via sysctl ou arquivos persistentes conforme o benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "3.3.2_ensure_packet_redirect_sending_is_disabled.sh"
+    script_audit: "3.3.2_ensure_packet_redirect_sending_is_disabled_audit.sh"
+    script_fix: "3.3.2_ensure_packet_redirect_sending_is_disabled_fix.sh"
+  - id: "3.3.3"
+    category: "Network Parameters Hardening"
+    description: "Ensure bogus icmp responses are ignored"
+    remediate: "# Ajustar parâmetros de rede via sysctl ou arquivos persistentes conforme o benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "3.3.3_ensure_bogus_icmp_responses_are_ignored.sh"
+    script_audit: "3.3.3_ensure_bogus_icmp_responses_are_ignored_audit.sh"
+    script_fix: "3.3.3_ensure_bogus_icmp_responses_are_ignored_fix.sh"
+  - id: "3.3.4"
+    category: "Network Parameters Hardening"
+    description: "Ensure broadcast icmp requests are ignored"
+    remediate: "# Ajustar parâmetros de rede via sysctl ou arquivos persistentes conforme o benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "3.3.4_ensure_broadcast_icmp_requests_are_ignored.sh"
+    script_audit: "3.3.4_ensure_broadcast_icmp_requests_are_ignored_audit.sh"
+    script_fix: "3.3.4_ensure_broadcast_icmp_requests_are_ignored_fix.sh"
+  - id: "3.3.5"
+    category: "Network Parameters Hardening"
+    description: "Ensure icmp redirects are not accepted"
+    remediate: "# Ajustar parâmetros de rede via sysctl ou arquivos persistentes conforme o benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "3.3.5_ensure_icmp_redirects_are_not_accepted.sh"
+    script_audit: "3.3.5_ensure_icmp_redirects_are_not_accepted_audit.sh"
+    script_fix: "3.3.5_ensure_icmp_redirects_are_not_accepted_fix.sh"
+  - id: "3.3.6"
+    category: "Network Parameters Hardening"
+    description: "Ensure secure icmp redirects are not accepted"
+    remediate: "# Ajustar parâmetros de rede via sysctl ou arquivos persistentes conforme o benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "3.3.6_ensure_secure_icmp_redirects_are_not_accepted.sh"
+    script_audit: "3.3.6_ensure_secure_icmp_redirects_are_not_accepted_audit.sh"
+    script_fix: "3.3.6_ensure_secure_icmp_redirects_are_not_accepted_fix.sh"
+  - id: "3.3.7"
+    category: "Network Parameters Hardening"
+    description: "Ensure reverse path filtering is enabled"
+    remediate: "# Ajustar parâmetros de rede via sysctl ou arquivos persistentes conforme o benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "3.3.7_ensure_reverse_path_filtering_is_enabled.sh"
+    script_audit: "3.3.7_ensure_reverse_path_filtering_is_enabled_audit.sh"
+    script_fix: "3.3.7_ensure_reverse_path_filtering_is_enabled_fix.sh"
+  - id: "3.3.8"
+    category: "Network Parameters Hardening"
+    description: "Ensure source routed packets are not accepted"
+    remediate: "# Ajustar parâmetros de rede via sysctl ou arquivos persistentes conforme o benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "3.3.8_ensure_source_routed_packets_are_not_accepted.sh"
+    script_audit: "3.3.8_ensure_source_routed_packets_are_not_accepted_audit.sh"
+    script_fix: "3.3.8_ensure_source_routed_packets_are_not_accepted_fix.sh"
+  - id: "3.3.9"
+    category: "Network Parameters Hardening"
+    description: "Ensure suspicious packets are logged"
+    remediate: "# Ajustar parâmetros de rede via sysctl ou arquivos persistentes conforme o benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "3.3.9_ensure_suspicious_packets_are_logged.sh"
+    script_audit: "3.3.9_ensure_suspicious_packets_are_logged_audit.sh"
+    script_fix: "3.3.9_ensure_suspicious_packets_are_logged_fix.sh"
+  - id: "3.3.10"
+    category: "Network Parameters Hardening"
+    description: "Ensure tcp syn cookies is enabled"
+    remediate: "# Ajustar parâmetros de rede via sysctl ou arquivos persistentes conforme o benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "3.3.10_ensure_tcp_syn_cookies_is_enabled.sh"
+    script_audit: "3.3.10_ensure_tcp_syn_cookies_is_enabled_audit.sh"
+    script_fix: "3.3.10_ensure_tcp_syn_cookies_is_enabled_fix.sh"
+  - id: "3.3.11"
+    category: "Network Parameters Hardening"
+    description: "Ensure ipv6 router advertisements are not accepted"
+    remediate: "# Ajustar parâmetros de rede via sysctl ou arquivos persistentes conforme o benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "3.3.11_ensure_ipv6_router_advertisements_are_not_accepted.sh"
+    script_audit: "3.3.11_ensure_ipv6_router_advertisements_are_not_accepted_audit.sh"
+    script_fix: "3.3.11_ensure_ipv6_router_advertisements_are_not_accepted_fix.sh"

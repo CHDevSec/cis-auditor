@@ -1,0 +1,41 @@
+controls:
+  - id: "1.3.1"
+    category: "AppArmor Configuration"
+    description: "Ensure AppArmor is installed"
+    remediate: "# Ajustar o arquivo /etc/apparmor/ conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "1.3.1_ensure_apparmor_is_installed.sh"
+    script_audit: "1.3.1_ensure_apparmor_is_installed_audit.sh"
+    script_fix: "1.3.1_ensure_apparmor_is_installed_fix.sh"
+  - id: "1.3.2"
+    category: "AppArmor Configuration"
+    description: "Ensure AppArmor is enabled in the bootloader"
+    remediate: "# Ajustar o arquivo /etc/default/grub conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "1.3.2_ensure_apparmor_is_enabled_in_the_bootloader.sh"
+    script_audit: "1.3.2_ensure_apparmor_is_enabled_in_the_bootloader_audit.sh"
+    script_fix: "1.3.2_ensure_apparmor_is_enabled_in_the_bootloader_fix.sh"
+  - id: "1.3.3"
+    category: "AppArmor Configuration"
+    description: "Ensure all AppArmor profiles are in enforce or complain mode"
+    remediate: "# Ajustar o arquivo /etc/apparmor.d/ conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "1.3.3_ensure_all_apparmor_profiles_are_in_enforce_or_complain_mode.sh"
+    script_audit: "1.3.3_ensure_all_apparmor_profiles_are_in_enforce_or_complain_mode_audit.sh"
+    script_fix: "1.3.3_ensure_all_apparmor_profiles_are_in_enforce_or_complain_mode_fix.sh"
+  - id: "1.3.4"
+    category: "AppArmor Configuration"
+    description: "Ensure all AppArmor profiles are enforced"
+    remediate: "# Ajustar o arquivo /etc/apparmor.d/ conforme a recomendação do benchmark"
+    level:
+      server: 1
+      workstation: 1
+    script: "1.3.4_ensure_all_apparmor_profiles_are_enforced.sh"
+    script_audit: "1.3.4_ensure_all_apparmor_profiles_are_enforced_audit.sh"
+    script_fix: "1.3.4_ensure_all_apparmor_profiles_are_enforced_fix.sh"

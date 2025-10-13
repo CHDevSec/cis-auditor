@@ -1,0 +1,221 @@
+controls:
+  - id: "2.1.1"
+    category: "Server Services Configuration"
+    description: "Ensure autofs services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.1_ensure_autofs_services_are_not_in_use.sh"
+    script_audit: "2.1.1_ensure_autofs_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.1_ensure_autofs_services_are_not_in_use_fix.sh"
+  - id: "2.1.2"
+    category: "Server Services Configuration"
+    description: "Ensure avahi daemon services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.2_ensure_avahi_daemon_services_are_not_in_use.sh"
+    script_audit: "2.1.2_ensure_avahi_daemon_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.2_ensure_avahi_daemon_services_are_not_in_use_fix.sh"
+  - id: "2.1.3"
+    category: "Server Services Configuration"
+    description: "Ensure dhcp server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.3_ensure_dhcp_server_services_are_not_in_use.sh"
+    script_audit: "2.1.3_ensure_dhcp_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.3_ensure_dhcp_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.4"
+    category: "Server Services Configuration"
+    description: "Ensure dns server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.4_ensure_dns_server_services_are_not_in_use.sh"
+    script_audit: "2.1.4_ensure_dns_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.4_ensure_dns_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.5"
+    category: "Server Services Configuration"
+    description: "Ensure dnsmasq services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.5_ensure_dnsmasq_services_are_not_in_use.sh"
+    script_audit: "2.1.5_ensure_dnsmasq_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.5_ensure_dnsmasq_services_are_not_in_use_fix.sh"
+  - id: "2.1.6"
+    category: "Server Services Configuration"
+    description: "Ensure ftp server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.6_ensure_ftp_server_services_are_not_in_use.sh"
+    script_audit: "2.1.6_ensure_ftp_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.6_ensure_ftp_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.7"
+    category: "Server Services Configuration"
+    description: "Ensure ldap server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.7_ensure_ldap_server_services_are_not_in_use.sh"
+    script_audit: "2.1.7_ensure_ldap_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.7_ensure_ldap_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.8"
+    category: "Server Services Configuration"
+    description: "Ensure message access server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.8_ensure_message_access_server_services_are_not_in_use.sh"
+    script_audit: "2.1.8_ensure_message_access_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.8_ensure_message_access_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.9"
+    category: "Server Services Configuration"
+    description: "Ensure network file system services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.9_ensure_network_file_system_services_are_not_in_use.sh"
+    script_audit: "2.1.9_ensure_network_file_system_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.9_ensure_network_file_system_services_are_not_in_use_fix.sh"
+  - id: "2.1.10"
+    category: "Server Services Configuration"
+    description: "Ensure nis server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.10_ensure_nis_server_services_are_not_in_use.sh"
+    script_audit: "2.1.10_ensure_nis_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.10_ensure_nis_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.11"
+    category: "Server Services Configuration"
+    description: "Ensure print server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.11_ensure_print_server_services_are_not_in_use.sh"
+    script_audit: "2.1.11_ensure_print_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.11_ensure_print_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.12"
+    category: "Server Services Configuration"
+    description: "Ensure rpcbind services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.12_ensure_rpcbind_services_are_not_in_use.sh"
+    script_audit: "2.1.12_ensure_rpcbind_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.12_ensure_rpcbind_services_are_not_in_use_fix.sh"
+  - id: "2.1.13"
+    category: "Server Services Configuration"
+    description: "Ensure rsync services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.13_ensure_rsync_services_are_not_in_use.sh"
+    script_audit: "2.1.13_ensure_rsync_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.13_ensure_rsync_services_are_not_in_use_fix.sh"
+  - id: "2.1.14"
+    category: "Server Services Configuration"
+    description: "Ensure samba file server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.14_ensure_samba_file_server_services_are_not_in_use.sh"
+    script_audit: "2.1.14_ensure_samba_file_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.14_ensure_samba_file_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.15"
+    category: "Server Services Configuration"
+    description: "Ensure snmp services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.15_ensure_snmp_services_are_not_in_use.sh"
+    script_audit: "2.1.15_ensure_snmp_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.15_ensure_snmp_services_are_not_in_use_fix.sh"
+  - id: "2.1.16"
+    category: "Server Services Configuration"
+    description: "Ensure tftp server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.16_ensure_tftp_server_services_are_not_in_use.sh"
+    script_audit: "2.1.16_ensure_tftp_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.16_ensure_tftp_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.17"
+    category: "Server Services Configuration"
+    description: "Ensure web proxy server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.17_ensure_web_proxy_server_services_are_not_in_use.sh"
+    script_audit: "2.1.17_ensure_web_proxy_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.17_ensure_web_proxy_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.18"
+    category: "Server Services Configuration"
+    description: "Ensure web server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.18_ensure_web_server_services_are_not_in_use.sh"
+    script_audit: "2.1.18_ensure_web_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.18_ensure_web_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.19"
+    category: "Server Services Configuration"
+    description: "Ensure xinetd services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.19_ensure_xinetd_services_are_not_in_use.sh"
+    script_audit: "2.1.19_ensure_xinetd_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.19_ensure_xinetd_services_are_not_in_use_fix.sh"
+  - id: "2.1.20"
+    category: "Server Services Configuration"
+    description: "Ensure X window server services are not in use"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.20_ensure_x_window_server_services_are_not_in_use.sh"
+    script_audit: "2.1.20_ensure_x_window_server_services_are_not_in_use_audit.sh"
+    script_fix: "2.1.20_ensure_x_window_server_services_are_not_in_use_fix.sh"
+  - id: "2.1.21"
+    category: "Server Services Configuration"
+    description: "Ensure mail transfer agent is configured for local-only mode"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.21_ensure_mail_transfer_agent_is_configured_for_local_only_mode.sh"
+    script_audit: "2.1.21_ensure_mail_transfer_agent_is_configured_for_local_only_mode_audit.sh"
+    script_fix: "2.1.21_ensure_mail_transfer_agent_is_configured_for_local_only_mode_fix.sh"
+  - id: "2.1.22"
+    category: "Server Services Configuration"
+    description: "Ensure only approved services are listening on a network interface"
+    remediate: "# Desative o serviço conforme a recomendação do benchmark CIS"
+    level:
+      server: 1
+      workstation: 1
+    script: "2.1.22_ensure_only_approved_services_are_listening_on_a_network_interface.sh"
+    script_audit: "2.1.22_ensure_only_approved_services_are_listening_on_a_network_interface_audit.sh"
+    script_fix: "2.1.22_ensure_only_approved_services_are_listening_on_a_network_interface_fix.sh"
