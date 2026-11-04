@@ -9,7 +9,7 @@ else
 fi
 
 echo "Verificando se o serviço autofs está habilitado..."
-systemctl is-enabled autofs.service 2>/dev/null | grep 'enabled' && echo "❌ Serviço habilitado"
+systemctl is-enabled autofs.service 2>/dev/null | grep '^enabled' && echo "❌ Serviço habilitado"
 
 echo "Verificando se o serviço autofs está ativo..."
 systemctl is-active autofs.service 2>/dev/null | grep '^active' && echo "❌ Serviço ativo"

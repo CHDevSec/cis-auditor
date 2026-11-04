@@ -9,7 +9,7 @@ else
 fi
 
 echo "Verificando se o serviço e socket estão habilitados..."
-systemctl is-enabled avahi-daemon.socket avahi-daemon.service 2>/dev/null | grep 'enabled' && echo "❌ Serviço habilitado"
+systemctl is-enabled avahi-daemon.socket avahi-daemon.service 2>/dev/null | grep '^enabled' && echo "❌ Serviço habilitado"
 
 echo "Verificando se o serviço e socket estão ativos..."
 systemctl is-active avahi-daemon.socket avahi-daemon.service 2>/dev/null | grep '^active' && echo "❌ Serviço ativo"

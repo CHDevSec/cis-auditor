@@ -9,7 +9,7 @@ else
 fi
 
 echo "Verificando se o serviço dnsmasq está habilitado..."
-systemctl is-enabled dnsmasq.service 2>/dev/null | grep 'enabled' && echo "❌ Serviço habilitado"
+systemctl is-enabled dnsmasq.service 2>/dev/null | grep '^enabled' && echo "❌ Serviço habilitado"
 
 echo "Verificando se o serviço dnsmasq está ativo..."
 systemctl is-active dnsmasq.service 2>/dev/null | grep '^active' && echo "❌ Serviço ativo"

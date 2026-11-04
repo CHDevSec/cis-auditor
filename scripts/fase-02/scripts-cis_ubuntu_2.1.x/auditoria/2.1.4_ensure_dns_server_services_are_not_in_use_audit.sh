@@ -9,7 +9,7 @@ else
 fi
 
 echo "Verificando se o serviço bind9 está habilitado..."
-systemctl is-enabled bind9.service 2>/dev/null | grep 'enabled' && echo "❌ Serviço habilitado"
+systemctl is-enabled bind9.service 2>/dev/null | grep '^enabled' && echo "❌ Serviço habilitado"
 
 echo "Verificando se o serviço bind9 está ativo..."
 systemctl is-active bind9.service 2>/dev/null | grep '^active' && echo "❌ Serviço ativo"

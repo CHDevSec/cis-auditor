@@ -9,7 +9,7 @@ else
 fi
 
 echo "Verificando se os serviços estão habilitados..."
-systemctl is-enabled isc-dhcp-server.service isc-dhcp-server6.service 2>/dev/null | grep 'enabled' && echo "❌ Serviços habilitados"
+systemctl is-enabled isc-dhcp-server.service isc-dhcp-server6.service 2>/dev/null | grep '^enabled' && echo "❌ Serviços habilitados"
 
 echo "Verificando se os serviços estão ativos..."
 systemctl is-active isc-dhcp-server.service isc-dhcp-server6.service 2>/dev/null | grep '^active' && echo "❌ Serviços ativos"
