@@ -1,0 +1,13 @@
+# build
+bin/
+
+# saída das auditorias (contém hostname e configuração da máquina)
+results/*
+!results/.gitkeep
+
+# editores / SO
+.idea/
+.vscode/
+*.swp
+.DS_Store
+__pycache__/
