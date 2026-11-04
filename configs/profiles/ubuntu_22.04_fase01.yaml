@@ -1,3 +1,5 @@
+title: "Fase 01 — Bootloader, memória, SSH e autenticação"
+scripts_dir: "scripts/Fase-01/auditoria" # relativo à raiz do repositório
 controls:
   - id: "1.4.1"
     category: "Bootloader Configuration"

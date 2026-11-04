@@ -1,3 +1,5 @@
+title: "Fase 02 — Serviços de servidor (2.1.x)"
+scripts_dir: "scripts/fase-02/scripts-cis_ubuntu_2.1.x/auditoria" # relativo à raiz do repositório
 controls:
   - id: "2.1.1"
     category: "Server Services Configuration"

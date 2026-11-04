@@ -1,3 +1,5 @@
+title: "Fase 02 — Firewall UFW (4.1.x)"
+scripts_dir: "scripts/fase-02/scripts-cis_ubuntu_ufw_4.1/auditoria" # relativo à raiz do repositório
 controls:
   - id: "4.1.1"
     category: "Host Based Firewall - UFW"

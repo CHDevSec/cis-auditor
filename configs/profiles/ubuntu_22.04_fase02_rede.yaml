@@ -1,3 +1,5 @@
+title: "Fase 02 — Parâmetros de rede (3.3.x)"
+scripts_dir: "scripts/fase-02/scripts-cis_ubuntu_3.3x_scripts/auditoria" # relativo à raiz do repositório
 controls:
   - id: "3.3.1"
     category: "Network Parameters Hardening"
