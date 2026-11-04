@@ -2,11 +2,14 @@ package auditor
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"gopkg.in/yaml.v3"
@@ -20,6 +23,9 @@ func New(cfg Config) (*auditorImpl, error) {
 	if err := os.MkdirAll(cfg.ResultsDir, 0755); err != nil {
 		return nil, fmt.Errorf("failed to create results directory: %w", err)
 	}
+	if cfg.Workers <= 0 {
+		cfg.Workers = runtime.NumCPU()
+	}
 	return &auditorImpl{cfg: cfg}, nil
 }
 
@@ -31,48 +37,58 @@ func (a *auditorImpl) Run(profile, machineType string, level int) (*Report, erro
 	hostname, _ := os.Hostname()
 	profilePath := filepath.Join(a.cfg.ProfilesDir, profile+".yaml")
 
-	controls, err := a.loadProfileControls(profilePath, machineType, level)
+	prof, err := LoadProfile(profilePath)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao carregar controles: %w", err)
 	}
+	// sem --scripts-dir, usa a pasta declarada no perfil (relativa ao diretório atual)
+	if a.cfg.ScriptsDir == "" {
+		if prof.ScriptsDir == "" {
+			return nil, fmt.Errorf("o perfil %s não declara scripts_dir: informe --scripts-dir", profile)
+		}
+		if a.cfg.ScriptsDir, err = filepath.Abs(prof.ScriptsDir); err != nil {
+			return nil, err
+		}
+	}
+	controls := a.selectControls(prof.Controls, machineType, level)
 
 	results := a.executeControls(controls)
 
-	report := &Report{
+	return &Report{
 		Profile:        profile,
 		MachineType:    machineType,
 		Level:          level,
-		Total:          len(controls),
-		Passed:         countResults(results, "PASS"),
-		Failed:         countResults(results, "FAIL"),
-		Errors:         countResults(results, "ERROR"),
+		Hostname:       hostname,
+		Timestamp:      time.Now().Format(time.RFC3339),
+		Total:          len(results),
+		Passed:         countResults(results, StatusPass),
+		Failed:         countResults(results, StatusFail),
+		Manual:         countResults(results, StatusManual),
+		Errors:         countResults(results, StatusError),
 		ResultsDir:     a.cfg.ResultsDir,
-		Timestamp:      time.Now().Format("02/01/2006 15:04:05"),
 		ControlResults: results,
-	}
-
-	if err := a.generateHTMLReport(report, hostname); err != nil {
-		return nil, fmt.Errorf("erro ao gerar relatório HTML: %w", err)
-	}
-
-	return report, nil
+	}, nil
 }
 
-func (a *auditorImpl) loadProfileControls(profilePath, machineType string, level int) ([]Control, error) {
+// LoadProfile lê um perfil YAML.
+func LoadProfile(profilePath string) (*Profile, error) {
 	yamlFile, err := os.ReadFile(profilePath)
 	if err != nil {
 		return nil, fmt.Errorf("erro ao ler arquivo YAML: %w", err)
 	}
 
-	var profile struct {
-		Controls []Control `yaml:"controls"`
-	}
+	var profile Profile
 	if err := yaml.Unmarshal(yamlFile, &profile); err != nil {
 		return nil, fmt.Errorf("erro ao decodificar YAML: %w", err)
 	}
+	return &profile, nil
+}
 
+// selectControls filtra os controles pelo tipo de máquina e nível, e descarta os que
+// não têm script de auditoria na pasta.
+func (a *auditorImpl) selectControls(controls []Control, machineType string, level int) []Control {
 	var validControls []Control
-	for _, control := range profile.Controls {
+	for _, control := range controls {
 		controlLevel, exists := control.Level[machineType]
 		if !exists || controlLevel > level {
 			continue
@@ -87,20 +103,35 @@ func (a *auditorImpl) loadProfileControls(profilePath, machineType string, level
 		validControls = append(validControls, control)
 	}
 
-	return validControls, nil
+	return validControls
 }
 
+// executeControls roda os scripts em paralelo (os de auditoria só leem o sistema) e
+// devolve os resultados na mesma ordem do perfil.
 func (a *auditorImpl) executeControls(controls []Control) []ControlResult {
-	var results []ControlResult
-	for _, control := range controls {
-		result, err := a.executeControl(control)
-		if err != nil {
-			fmt.Printf("[ERROR] Erro ao executar controle %s: %v\n", control.ID, err)
-			result.Status = "ERROR"
-			result.Details = err.Error()
-		}
-		results = append(results, result)
+	results := make([]ControlResult, len(controls))
+	jobs := make(chan int)
+	var wg sync.WaitGroup
+	for w := 0; w < a.cfg.Workers; w++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for i := range jobs {
+				result, err := a.executeControl(controls[i])
+				if err != nil {
+					fmt.Printf("[ERROR] Erro ao executar controle %s: %v\n", controls[i].ID, err)
+					result.Status = StatusError
+					result.Details = err.Error()
+				}
+				results[i] = result
+			}
+		}()
 	}
+	for i := range controls {
+		jobs <- i
+	}
+	close(jobs)
+	wg.Wait()
 	return results
 }
 
@@ -110,6 +141,7 @@ func (a *auditorImpl) executeControl(control Control) (ControlResult, error) {
 		Category:    control.Category,
 		Description: control.Description,
 		Remediation: control.Remediate,
+		FixScript:   a.fixScriptPath(control),
 	}
 
 	scriptPath := filepath.Join(a.cfg.ScriptsDir, control.ScriptAudit)
@@ -122,39 +154,98 @@ func (a *auditorImpl) executeControl(control Control) (ControlResult, error) {
 	return result, nil
 }
 
+// fixScriptPath devolve o script de remediação do controle (pasta "remediacao" ao lado
+// da pasta de auditoria), relativo ao diretório atual quando possível.
+func (a *auditorImpl) fixScriptPath(control Control) string {
+	if control.ScriptFix == "" {
+		return ""
+	}
+	p := filepath.Join(filepath.Dir(a.cfg.ScriptsDir), "remediacao", control.ScriptFix)
+	if _, err := os.Stat(p); err != nil {
+		return ""
+	}
+	if wd, err := os.Getwd(); err == nil {
+		if rel, err := filepath.Rel(wd, p); err == nil && !strings.HasPrefix(rel, "..") {
+			return rel
+		}
+	}
+	return p
+}
+
+// execCommand roda o script com bash. Código de saída diferente de zero NÃO é erro:
+// vários checks terminam num grep que não encontrou nada, e o veredito vem da saída.
+// Só é erro quando o script não pôde ser executado.
 func (a *auditorImpl) execCommand(scriptPath string) (string, error) {
 	cmd := exec.Command("bash", scriptPath)
 	cmd.Env = os.Environ()
 
 	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return string(output), fmt.Errorf("%v: %s", err, string(output))
+	var exitErr *exec.ExitError
+	if err != nil && !errors.As(err, &exitErr) {
+		return string(output), err
 	}
-
 	return string(output), nil
 }
 
-func parseAuditOutput(output string) (status, details string) {
-	lines := strings.Split(strings.TrimSpace(output), "\n")
+var (
+	failMarkers = []string{"** FAIL **", "❌", "✘", "✖"}
+	passMarkers = []string{"** PASS **", "✅", "✔"}
+)
 
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
+// parseAuditOutput converte a saída de um script em status + detalhes.
+// Qualquer linha de falha vence; sem falha e com ao menos uma linha de sucesso é PASS;
+// sem nenhum marcador o script só coletou informação e o controle fica MANUAL.
+func parseAuditOutput(output string) (status, details string) {
+	var notes, info []string
+	pass, fail := false, false
+
+	for _, raw := range strings.Split(strings.TrimSpace(output), "\n") {
+		line := strings.TrimSpace(raw)
 		switch {
-		case strings.Contains(line, "** PASS **"):
-			status = "PASS"
-		case strings.Contains(line, "** FAIL **"):
-			status = "FAIL"
+		case line == "":
+			continue
+		case containsAny(line, failMarkers):
+			fail = true
+			if msg := stripMarkers(line); msg != "" {
+				notes = append(notes, msg)
+			}
+		case containsAny(line, passMarkers):
+			pass = true
 		case strings.HasPrefix(line, "- "):
-			details += strings.TrimPrefix(line, "- ") + "\n"
+			notes = append(notes, strings.TrimPrefix(line, "- "))
+		case strings.HasPrefix(line, "Verificando"), strings.HasPrefix(line, "Listando"):
+			// cabeçalho do script, não é resultado
+		default:
+			info = append(info, line)
 		}
 	}
 
-	if status == "" {
-		status = "FAIL"
-		details = "Formato de saída inválido do script"
+	switch {
+	case fail:
+		return StatusFail, strings.Join(notes, "\n")
+	case pass:
+		return StatusPass, strings.Join(notes, "\n")
+	case len(info) > 0:
+		return StatusManual, strings.Join(info, "\n")
+	default:
+		return StatusManual, "O script não retornou saída: revisar manualmente."
 	}
+}
 
-	return status, strings.TrimSpace(details)
+func containsAny(s string, subs []string) bool {
+	for _, sub := range subs {
+		if strings.Contains(s, sub) {
+			return true
+		}
+	}
+	return false
+}
+
+func stripMarkers(line string) string {
+	for _, m := range append(failMarkers, passMarkers...) {
+		line = strings.ReplaceAll(line, m, "")
+	}
+	return strings.TrimSpace(line)
 }
 
 func countResults(results []ControlResult, status string) int {
@@ -167,138 +258,9 @@ func countResults(results []ControlResult, status string) int {
 	return count
 }
 
-func (a *auditorImpl) generateHTMLReport(report *Report, hostname string) error {
-	html := `<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Relatório CIS - ` + report.Profile + `</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 20px;
-            line-height: 1.6;
-            color: #333;
-        }
-        .header {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .summary {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .passed { color: #28a745; font-weight: bold; }
-        .failed { color: #dc3545; font-weight: bold; }
-        .error { color: #ffc107; font-weight: bold; }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #2c3e50;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        .status-pass { color: #28a745; }
-        .status-fail { color: #dc3545; }
-        .status-error { color: #ffc107; }
-        .remediation {
-            font-family: monospace;
-            background: #f8f9fa;
-            padding: 5px;
-            border-radius: 3px;
-        }
-        .details {
-            font-size: 0.9em;
-            color: #666;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Relatório de Auditoria CIS</h1>
-        <p><strong>Hostname:</strong> ` + hostname + ` | <strong>Tipo:</strong> ` + report.MachineType + ` | <strong>Nível:</strong> ` + fmt.Sprint(report.Level) + `</p>
-    </div>
-
-    <div class="summary">
-        <h3>Resumo</h3>
-        <p><span class="passed">✓ Passaram: ` + fmt.Sprint(report.Passed) + `</span> | 
-           <span class="failed">✗ Falharam: ` + fmt.Sprint(report.Failed) + `</span> |
-           <span class="error">⚠ Erros: ` + fmt.Sprint(report.Errors) + `</span></p>
-    </div>
-
-    <h3>Detalhes da Auditoria</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Categoria</th>
-                <th>CIS ID</th>
-                <th>Status</th>
-                <th>Descrição</th>
-                <th>Correção</th>
-            </tr>
-        </thead>
-        <tbody>`
-
-	for _, result := range report.ControlResults {
-		statusClass := "status-pass"
-		switch result.Status {
-		case "FAIL":
-			statusClass = "status-fail"
-		case "ERROR":
-			statusClass = "status-error"
-		}
-
-		remediation := fmt.Sprintf(`<div class="remediation"><code>bash scripts/Fase-01/remediacao/%s_fix.sh</code></div>`, result.ID)
-
-		html += fmt.Sprintf(`
-            <tr>
-                <td>%s</td>
-                <td>%s</td>
-                <td class="%s">%s</td>
-                <td>%s<div class="details">%s</div></td>
-                <td>%s</td>
-            </tr>`,
-			result.Category,
-			result.ID,
-			statusClass,
-			result.Status,
-			result.Description,
-			result.Details,
-			remediation)
-	}
-
-	html += `
-        </tbody>
-    </table>
-</body>
-</html>`
-
-	reportFile := filepath.Join(report.ResultsDir, "cis-audit-report.html")
-	if err := os.WriteFile(reportFile, []byte(html), 0644); err != nil {
-		return fmt.Errorf("erro ao salvar relatório HTML: %w", err)
-	}
-
-	return nil
-}
-
-func SaveResultsToJSON(results []ControlResult, outputPath string) error {
-	jsonData, err := json.MarshalIndent(results, "", "  ")
+// SaveReportJSON grava o relatório completo (metadados, resumo e controles).
+func SaveReportJSON(report *Report, outputPath string) error {
+	jsonData, err := json.MarshalIndent(report, "", "  ")
 	if err != nil {
 		return fmt.Errorf("erro ao gerar JSON: %w", err)
 	}
